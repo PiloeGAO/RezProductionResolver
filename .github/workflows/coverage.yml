@@ -1,14 +1,12 @@
 name: Coverage
 
 on:
-  workflow_run:
-    workflows: ["CI Tests"]
-    types:
-      - completed
+  push:
+    branches:
+      - main
 
 jobs:
   coverage:
-    if: ${{ github.event.workflow_run.conclusion == 'success' }}
     runs-on: ubuntu-latest
     steps:
       - name: Checkout code
@@ -32,16 +30,3 @@ jobs:
         run: |
           coverage xml
           coverage report
-
-      - name: Upload coverage report
-        uses: actions/upload-artifact@v3
-        with:
-          name: coverage-report
-          path: coverage.xml
-
-      - name: Post coverage to GitHub
-        uses: brianloveswords/coverage-to-gh-action@v1
-        with:
-          coverageFile: coverage.xml
-          flagName: main
-          target: 90  # Optional: Set coverage target
