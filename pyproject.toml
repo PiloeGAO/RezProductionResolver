@@ -1,0 +1,48 @@
+[project]
+name = "RezProductionResolver"
+version = "0.0.1"
+description = "A Rez plugin for managing production environments through staged changes in animation/VFX workflows."
+authors = [
+    {name = "PiloeGAO (Leo Depoix)"}
+]
+license = "MIT"
+readme = "README.md"
+requires-python = ">=3.13"
+dependencies = [
+    "rez==3.3.0",
+]
+
+[project.urls]
+Homepage = "https://github.com/PiloeGAO/RezProductionResolver"
+Documentation = "https://piloegao.github.io/RezProductionResolver"
+IssueTracker = "https://github.com/PiloeGAO/RezProductionResolver/issues"
+
+[project.optional-dependencies]
+tests = [
+    "pytest==8.4.2",
+    "pytest-freezegun==0.4.2",
+    "pytest-mock==3.15.1",
+    "coverage==7.11.0",
+    "setuptools",
+]
+docs = [
+    "sphinx >=7.0.0,<9.0.0",
+    "furo==2025.9.25"
+]
+
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+markers = ["e2e", "integration", "unit"]
+
+[tool.coverage.run]
+source = ["src/rezplugins/command/"]
+omit = [
+    "src/rezplugins/command/__init__.py",
+    "src/rezplugins/command/manage.py",
+    "src/rezplugins/command/resolve.py",
+    "src/rezplugins/command/rezconfig.py",
+]
+
+[tool.coverage.report]
+show_missing = true
+include = ["src/rezplugins/command/production_resolver_lib.py"]
