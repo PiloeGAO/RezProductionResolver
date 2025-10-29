@@ -384,8 +384,12 @@ def test_save(mocker: object, staging_database: Path, mock_rez_config: object) -
 
 
 @pytest.mark.freeze_time("2020-01-01")
-def test__compute_history_database_path():
-    """Tests the computation of the history database path."""
+def test__compute_history_database_path(mock_rez_config: object):
+    """Tests the computation of the history database path.
+
+    Args:
+        mock_rez_config (object): Mocked rez configuration.
+    """
     with ProductionResolverDatabase(load_production=False) as database:
         assert database._compute_history_database_path() == (
             database.history_folder_path
