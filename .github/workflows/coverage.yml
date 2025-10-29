@@ -1,0 +1,47 @@
+name: Coverage
+
+on:
+  workflow_run:
+    workflows: ["CI Tests"]
+    types:
+      - completed
+
+jobs:
+  coverage:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Set up Python
+        uses: actions/setup-python@v4
+        with:
+          python-version: '3.13.7'
+
+      - name: Install dependencies
+        run: |
+          python -m pip install --upgrade pip
+          pip install -e .[tests]
+
+      - name: Run tests with coverage
+        run: |
+          coverage run -m pytest tests/
+
+      - name: Generate coverage report
+        run: |
+          coverage xml
+          coverage report
+
+      - name: Upload coverage report
+        uses: actions/upload-artifact@v3
+        with:
+          name: coverage-report
+          path: coverage.xml
+
+      - name: Post coverage to GitHub
+        uses: brianloveswords/coverage-to-gh-action@v1
+        with:
+          coverageFile: coverage.xml
+          flagName: main
+          target: 90  # Optional: Set coverage target
